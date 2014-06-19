@@ -1,0 +1,35 @@
+{
+  "name": "interpo",
+  "version": "0.0.1",
+  "description": "piecewise cubic hermite interpolating polynomials (pchip) for node",
+  "main": "index.js",
+  "scripts": {
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/WhoopInc/interpo.git"
+  },
+  "keywords": [
+    "pchip",
+    "piecewise",
+    "cubic",
+    "hermite",
+    "interpolating",
+    "polynomicals",
+    "interpolation",
+    "monotone",
+    "monotonic"
+  ],
+  "author": "Nikhil Benesch <benesch@whoop.com>",
+  "license": "GPL-3.0",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/WhoopInc/interpo/issues"
+  },
+  "homepage": "https://github.com/WhoopInc/interpo",
+  "dependencies": {
+    "bindings": "^1.2.0",
+    "nan": "^1.2.0"
+  }
+}
