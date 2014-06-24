@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "install": "node-gyp rebuild",
-    "test": "mocha"
+    "test": "jshint *.js test && mocha"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
   "devDependencies": {
     "chai": "^1.9.1",
     "chai-stats": "^0.3.0",
+    "jshint": "^2.5.1",
     "mocha": "^1.20.1"
   }
 }

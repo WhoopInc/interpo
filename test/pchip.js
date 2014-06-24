@@ -1,3 +1,5 @@
+/* globals describe, it */
+
 var Pchip = require("../").Pchip;
 
 describe("Pchip", function () {
