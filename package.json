@@ -4,7 +4,8 @@
   "description": "piecewise cubic hermite interpolating polynomials (pchip) for node",
   "main": "index.js",
   "scripts": {
-    "install": "node-gyp rebuild"
+    "install": "node-gyp rebuild",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -31,5 +32,10 @@
   "dependencies": {
     "bindings": "^1.2.0",
     "nan": "^1.2.0"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "chai-stats": "^0.3.0",
+    "mocha": "^1.20.1"
   }
 }
