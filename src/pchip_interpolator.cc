@@ -8,6 +8,16 @@ using namespace v8;
 
 static Persistent<Function> constructor;
 
+bool IsNumericArray(Local<Array> arr) {
+  int length = arr->Length();
+  for (int i = 0; i < length; i++) {
+    if (!arr->Get(i)->IsNumber()) {
+      return false;
+    }
+  }
+  return true;
+}
+
 PchipInterpolator::PchipInterpolator() {};
 PchipInterpolator::~PchipInterpolator() {};
 
@@ -47,6 +57,10 @@ NAN_METHOD(PchipInterpolator::New) {
 
   if (x->Length() != f->Length()) {
     return NanThrowTypeError("array lengths must match");
+  }
+
+  if (!IsNumericArray(x) || !IsNumericArray(f)) {
+    return NanThrowTypeError("array contains non-numeric elements");
   }
 
   PchipInterpolator *obj = new PchipInterpolator();
