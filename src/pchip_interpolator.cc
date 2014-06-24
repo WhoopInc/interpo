@@ -39,14 +39,14 @@ NAN_METHOD(PchipInterpolator::New) {
   }
 
   if (!args[0]->IsArray() || !args[1]->IsArray()) {
-    NanThrowTypeError("PchipInterpolator: expected two array args");
+    return NanThrowTypeError("expected two array args");
   }
 
   Local<Array> x = Local<Array>::Cast(args[0]);
   Local<Array> f = Local<Array>::Cast(args[1]);
 
   if (x->Length() != f->Length()) {
-    NanThrowTypeError("PchipInterpolator: array lengths must match");
+    return NanThrowTypeError("array lengths must match");
   }
 
   PchipInterpolator *obj = new PchipInterpolator();
@@ -67,9 +67,9 @@ NAN_METHOD(PchipInterpolator::New) {
 
   switch (ierr) {
     case 0: break;
-    case -1: NanThrowError("number of data points less than 2");
-    case -3: NanThrowError("x-array not strictly increasing");
-    default: NanThrowError("PchipInterpolator: internal error");
+    case -1: return NanThrowError("less than two data points");
+    case -3: return NanThrowError("x array not strictly increasing");
+    default: return NanThrowError("internal error", ierr);
   }
 
   obj->Wrap(args.This());
@@ -81,7 +81,7 @@ NAN_METHOD(PchipInterpolator::Evaluate) {
   NanEscapableScope();
 
   if (!args[0]->IsNumber()) {
-    NanThrowError("PchipInterpolator#evaluate: expecting one numeric arg");
+    NanThrowError("expecting one numeric arg");
   }
 
   PchipInterpolator *obj = ObjectWrap::Unwrap<PchipInterpolator>(args.This());
@@ -96,8 +96,10 @@ NAN_METHOD(PchipInterpolator::Evaluate) {
 
   dpchfe_(obj->n, obj->x, obj->f, obj->d, incfd, skip, ne, xe, fe, ierr);
 
-  if (0 != ierr) {
-    NanThrowError("PchipInterpolator#evaluate: internal error");
+  switch (ierr) {
+    case 0: break;
+    case 1: return NanThrowError("x out of range");
+    default: return NanThrowError("internal error", ierr);
   }
 
   NanReturnValue(NanNew<Number>(fe));
