@@ -2,7 +2,7 @@
 #include <nan.h>
 
 #include "pchip_interpolator.h"
-#include "slatec/slatec.h"
+#include "slatec.h"
 
 using namespace v8;
 
