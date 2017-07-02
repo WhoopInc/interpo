@@ -79,6 +79,16 @@ brew install gcc
 brew link --force gcc
 ```
 
+## Changelog
+
+### v1.0.1
+
+*July 1, 2017.* Support for Node v0.12, v4, v5, v6, v7, and v8.
+
+### v1.0.0
+
+*June 24, 2017.* First release.
+
 [homebrew]: http://brew.sh
 [node.js]: http://nodejs.org
 [pchdoc]: http://www.netlib.org/slatec/pchip/pchdoc.f

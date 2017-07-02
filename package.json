@@ -1,6 +1,6 @@
 {
   "name": "interpo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "piecewise cubic hermite interpolating polynomials (pchip) for node",
   "main": "index.js",
   "scripts": {
