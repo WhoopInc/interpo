@@ -1,4 +1,7 @@
 {
+  "variables": {
+    "clang": 0
+  },
   "targets": [
     {
       "target_name": "interpo",

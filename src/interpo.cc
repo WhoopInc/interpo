@@ -5,7 +5,8 @@
 using namespace v8;
 
 void InitAll(Handle<Object> exports) {
-  exports->Set(NanNew<String>("Pchip"), PchipInterpolator::Init());
+  exports->Set(Nan::New<String>("Pchip").ToLocalChecked(),
+    Nan::New(PchipInterpolator::Init()));
 }
 
 NODE_MODULE(interpo, InitAll);

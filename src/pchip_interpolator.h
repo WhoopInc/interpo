@@ -4,9 +4,9 @@
 #include <nan.h>
 #include <node.h>
 
-class PchipInterpolator : public node::ObjectWrap {
+class PchipInterpolator : public Nan::ObjectWrap {
   public:
-    static v8::Handle<v8::Function> Init();
+    static Nan::Persistent<v8::Function>& Init();
     static NAN_METHOD(NewInstance);
 
   private:

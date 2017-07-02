@@ -31,7 +31,7 @@
   "homepage": "https://github.com/WhoopInc/interpo",
   "dependencies": {
     "bindings": "^1.2.0",
-    "nan": "^1.2.0"
+    "nan": "^2.6.2"
   },
   "devDependencies": {
     "chai": "^1.9.1",

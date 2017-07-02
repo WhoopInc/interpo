@@ -6,7 +6,7 @@
 
 using namespace v8;
 
-static Persistent<Function> constructor;
+static Nan::Persistent<Function> constructor;
 
 bool IsNumericArray(Local<Array> arr) {
   int length = arr->Length();
@@ -21,46 +21,48 @@ bool IsNumericArray(Local<Array> arr) {
 PchipInterpolator::PchipInterpolator() {};
 PchipInterpolator::~PchipInterpolator() {};
 
-Handle<Function> PchipInterpolator::Init() {
+Nan::Persistent<Function>& PchipInterpolator::Init() {
   // Turn off SLATEC's diagnostic output for recoverable errors.
   int kontrl = 0;
   xsetf_(kontrl);
 
-  NanScope();
+  Nan::HandleScope scope;
 
-  Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
+  Local<FunctionTemplate> tpl = Nan::New<FunctionTemplate>(New);
 
-  tpl->SetClassName(NanNew<String>("PchipInterpolator"));
+  tpl->SetClassName(Nan::New<String>("PchipInterpolator").ToLocalChecked());
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-  NODE_SET_PROTOTYPE_METHOD(tpl, "evaluate", Evaluate);
+  Nan::SetPrototypeMethod(tpl, "evaluate", Evaluate);
 
-  NanAssignPersistent(constructor, tpl->GetFunction());
+  constructor.Reset(tpl->GetFunction());
   return constructor;
 }
 
 NAN_METHOD(PchipInterpolator::New) {
-  NanEscapableScope();
+  Nan::EscapableHandleScope scope;
 
-  if (!args.IsConstructCall()) {
+  if (!info.IsConstructCall()) {
     const int argc = 2;
-    Local<Value> argv[argc] = { args[0], args[1] };
-    NanReturnValue(constructor->NewInstance(argc, argv));
+    Local<Value> argv[argc] = { info[0], info[1] };
+    info.GetReturnValue().Set(
+      Nan::NewInstance(Nan::New(constructor), argc, argv).ToLocalChecked());
+    return;
   }
 
-  if (!args[0]->IsArray() || !args[1]->IsArray()) {
-    return NanThrowTypeError("expected two array args");
+  if (!info[0]->IsArray() || !info[1]->IsArray()) {
+    return Nan::ThrowTypeError("expected two array args");
   }
 
-  Local<Array> x = Local<Array>::Cast(args[0]);
-  Local<Array> f = Local<Array>::Cast(args[1]);
+  Local<Array> x = Local<Array>::Cast(info[0]);
+  Local<Array> f = Local<Array>::Cast(info[1]);
 
   if (x->Length() != f->Length()) {
-    return NanThrowTypeError("array lengths must match");
+    return Nan::ThrowTypeError("array lengths must match");
   }
 
   if (!IsNumericArray(x) || !IsNumericArray(f)) {
-    return NanThrowTypeError("array contains non-numeric elements");
+    return Nan::ThrowTypeError("array contains non-numeric elements");
   }
 
   PchipInterpolator *obj = new PchipInterpolator();
@@ -81,40 +83,40 @@ NAN_METHOD(PchipInterpolator::New) {
 
   switch (ierr) {
     case 0: break;
-    case -1: return NanThrowError("less than two data points");
-    case -3: return NanThrowError("x array not strictly increasing");
-    default: return NanThrowError("internal error", ierr);
+    case -1: return Nan::ThrowError("less than two data points");
+    case -3: return Nan::ThrowError("x array not strictly increasing");
+    default: return Nan::ThrowError("internal error");
   }
 
-  obj->Wrap(args.This());
+  obj->Wrap(info.This());
 
-  NanReturnValue(args.This());
+  info.GetReturnValue().Set(info.This());
 }
 
 NAN_METHOD(PchipInterpolator::Evaluate) {
-  NanEscapableScope();
+  Nan::EscapableHandleScope scope;
 
-  if (!args[0]->IsNumber()) {
-    NanThrowError("expecting one numeric arg");
+  if (!info[0]->IsNumber()) {
+    Nan::ThrowError("expecting one numeric arg");
   }
 
-  PchipInterpolator *obj = ObjectWrap::Unwrap<PchipInterpolator>(args.This());
+  PchipInterpolator *obj = Nan::ObjectWrap::Unwrap<PchipInterpolator>(info.This());
 
   int ierr = 0;
   int incfd = 1;
   int skip = 1;
 
   int ne = 1;
-  double xe = args[0]->NumberValue();
+  double xe = info[0]->NumberValue();
   double fe;
 
   dpchfe_(obj->n, obj->x, obj->f, obj->d, incfd, skip, ne, xe, fe, ierr);
 
   switch (ierr) {
     case 0: break;
-    case 1: return NanThrowError("x out of range");
-    default: return NanThrowError("internal error", ierr);
+    case 1: return Nan::ThrowError("x out of range");
+    default: return Nan::ThrowError("internal error");
   }
 
-  NanReturnValue(NanNew<Number>(fe));
+  info.GetReturnValue().Set(Nan::New<Number>(fe));
 }
