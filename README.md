@@ -1,3 +1,6 @@
+## Notice: This repository is no longer maintained as of 3/26/2024
+
+
 # interpo
 
 <a href="https://travis-ci.org/WhoopInc/interpo">
